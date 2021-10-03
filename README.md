@@ -3,7 +3,7 @@
 
 ## Build
 ```
-docker build --no-cache-t http_serv .
+docker build --no-cache -t http_serv .
 docker run -p 80:80 http_serv
 ```
 

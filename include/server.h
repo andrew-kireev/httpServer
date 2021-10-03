@@ -14,7 +14,7 @@
 
 class Server {
 public:
-	Server(int port) : thread_pool_(256), port_(port) {}
+	Server(int port, int thread_amount) : thread_pool_(thread_amount), port_(port) {}
 
 	int Open() {
 		struct sockaddr_in addr{};
