@@ -46,7 +46,7 @@ public:
 	template<class F>
 	void add_task(F &&f) {
 		auto task = std::make_shared<std::packaged_task<void()>>(
-				std::bind(std::forward<F>(f))
+				std::bind(f)
 		);
 
 		{

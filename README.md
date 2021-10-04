@@ -7,6 +7,11 @@ docker build --no-cache -t http_serv .
 docker run -p 80:80 http_serv
 ```
 
+```
+docker build -t nginx -f nginx.Dockerfile .
+docker run -p 8888:8888 --name nginx -t nginx
+```
+
 ## Benchmarks
 
 ### Nginx
