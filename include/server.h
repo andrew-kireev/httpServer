@@ -14,7 +14,8 @@
 
 class Server {
 public:
-	Server(int port, int thread_amount) : thread_pool_(thread_amount), port_(port) {}
+	Server(int port, int thread_amount) :
+			thread_pool_(thread_amount), port_(port) {}
 
 	int Open() {
 		struct sockaddr_in addr{};
@@ -64,6 +65,7 @@ private:
 	ThreadPool thread_pool_;
 	int server_socket_ = -1;
 	int port_;
+	std::string doc_root_ = "./";
 };
 
 #endif //HTTPSERVER_SERVER_H

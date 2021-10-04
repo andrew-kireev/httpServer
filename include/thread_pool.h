@@ -17,16 +17,13 @@ public:
 
 	explicit ThreadPool(size_t thread_amount) {
 		for (size_t i = 0; i < thread_amount; ++i) {
-
 			auto worker = [this]() {
 
 				std::cout << "запустили" << std::endl;
 
 				while (true) {
-
 					std::function<void()> task;
 					{
-
 						std::unique_lock<std::mutex> lock(this->queue_mutex_);
 						this->condition_.wait(lock,
 											  [this] { return !this->queue_.empty(); });
@@ -46,29 +43,24 @@ public:
 		}
 	}
 
-	~ThreadPool() {
-		for (auto &worker : threads_) {
-			worker.join();
-		}
-	}
-
-	template<class F, class... Args>
-	auto add_task(F &&f, Args &&... args) {
-		using return_type = typename std::result_of<F(Args...)>::type;
-
-		auto task = std::make_shared<std::packaged_task<return_type()> >(
-				std::bind(std::forward<F>(f), std::forward<Args>(args)...)
+	template<class F>
+	void add_task(F &&f) {
+		auto task = std::make_shared<std::packaged_task<void()>>(
+				std::bind(std::forward<F>(f))
 		);
 
-		auto res = task->get_future();
 		{
 			std::unique_lock<std::mutex> lock(queue_mutex_);
 			queue_.emplace([task]() { (*task)(); });
 		}
 		condition_.notify_one();
-		return res;
 	}
 
+	~ThreadPool() {
+		for (auto &worker : threads_) {
+			worker.join();
+		}
+	}
 
 private:
 	std::vector<std::thread> threads_;
